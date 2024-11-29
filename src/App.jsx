@@ -6,38 +6,31 @@ import { v4 } from "uuid";
 function App() {
   const [tasks, setTasks] = useState(
     JSON.parse(localStorage.getItem("tasks")) || []
-  ); //Salvando as informacoes inseridas pelo usuario
+  );
+  const [totalValue, setTotalValue] = useState(0);
 
   useEffect(() => {
-    localStorage.setItem("tasks", JSON.stringify(tasks)); // convertendo o task () em string
+    localStorage.setItem("tasks", JSON.stringify(tasks));
   }, [tasks]);
 
   useEffect(() => {
-    const fetchTasks = async () => {
-      const response = await fetch(
-        "https://jsonplaceholder.typicode.com/todos?_limit=10",
-        {
-          method: "GET",
-        }
+    const calculateTotalValue = () => {
+      const total = tasks.reduce(
+        (acc, task) => acc + parseFloat(task.valor || 0),
+        0
       );
-      const data = await response.json();
-      setTasks(data);
+      setTotalValue(total);
     };
-    // Se quiser pode chamar uma API para pegar as tarefas
-    //fetchTasks();
-  }, []);
+    calculateTotalValue();
+  }, [tasks]);
 
   function onTaskClick(taskId) {
     const newTasks = tasks.map((task) => {
-      // PRECISO ATUALIZAR ESSA TAREFA
       if (task.id === taskId) {
         return { ...task, isCompleted: !task.isCompleted };
       }
-      // NÃO PRECISO ATUALIZAR ESSA TAREFA
       return task;
     });
-    // Aqui você pode fazer algo quando um task é clicado.
-    // Por exemplo, você pode mudar a cor do botão para indicar que a tarefa foi completada.
     setTasks(newTasks);
   }
 
@@ -46,18 +39,20 @@ function App() {
     setTasks(newTasks);
   }
 
-  function onAddTaskSubmit(title, description) {
+  function onAddTaskSubmit(title, description, data, valor) {
     const newTask = {
       id: v4(),
       title,
       description,
+      data,
+      valor: parseFloat(valor) || 0,
       isCompleted: false,
     };
     setTasks([...tasks, newTask]);
   }
 
   return (
-    <div className="w.screen h-screen bg-slate-500 flex justify-center p-6">
+    <div className="w.screen h-screen bg-fuchsia-900 flex justify-center p-6">
       <div className="w-[500px] space-y-4">
         <h1 className="text-slate-100 text-3xl font-bold text-center">
           DiaFácil
@@ -68,10 +63,14 @@ function App() {
           onTaskClick={onTaskClick}
           onDeleteTaskClick={onDeleteTaskClick}
         />
+        <div className="bg-slate-200 p-4 rounded-md shadow text-center">
+          <p className="text-slate-600 text-lg font-bold">
+            Valor total dos serviços: R$ {totalValue.toFixed(2)}
+          </p>
+        </div>
       </div>
     </div>
   );
 }
 
 export default App;
-// State (Estado) = Quando você quer fazer alguma coisa em resposta a interação do usuário.

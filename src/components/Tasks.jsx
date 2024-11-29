@@ -1,18 +1,22 @@
-// .jsx - informa que aquele arquivo é react
-// "space-y-4"  espassamento na vertical entre os itens
-// shadow sombra
-
-import { ChevronRightIcon, TrashIcon } from "lucide-react";
+import { CheckIcon, ChevronRightIcon, TrashIcon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 function Tasks({ tasks, onTaskClick, onDeleteTaskClick }) {
   const navigate = useNavigate();
 
   function onSeeDetailsClick(task) {
-    const query = new URLSearchParams(); //por seguraça
+    const query = new URLSearchParams();
     query.set("title", task.title);
     query.set("description", task.description);
+    query.set("data", task.data);
+    query.set("valor", task.valor);
     navigate(`/task?${query.toString()}`);
+  }
+
+  function formatDate(dateString) {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    return date.toLocaleDateString("pt-BR");
   }
 
   return (
@@ -25,7 +29,8 @@ function Tasks({ tasks, onTaskClick, onDeleteTaskClick }) {
               task.isCompleted && "line-through"
             }`}
           >
-            {task.title}
+            {task.isCompleted && <CheckIcon />}
+            Cliente: {task.title} - Data do Serviço: {formatDate(task.data)}
           </button>
 
           <button

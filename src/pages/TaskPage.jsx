@@ -6,8 +6,11 @@ function TaskPage() {
   const [searchParams] = useSearchParams();
   const title = searchParams.get("title");
   const description = searchParams.get("description");
+  const data = searchParams.get("data");
+  const valor = searchParams.get("valor");
+
   return (
-    <div className="h-screen w-screen bg-slate-500 p-6">
+    <div className="h-screen w-screen bg-fuchsia-900 p-6">
       <div className="w-[500px] mx-auto space-y-4">
         <div className="flex justify-center relative mb-6">
           <button
@@ -17,12 +20,14 @@ function TaskPage() {
             <ChevronLeftIcon />
           </button>
           <h1 className="text-slate-100 text-3xl font-bold text-center">
-            Detalhes da Tarefa
+            Detalhes dos serviços
           </h1>
         </div>
         <div className="bg-slate-200 p-4 rounded-md">
-          <h2 className="text-xl font-bold text-slate-600">{title}</h2>
-          <p className="text-slate-600">{description}</p>
+          <h2 className="text-xl font-bold text-slate-600">Cliente: {title}</h2>
+          <p className="text-slate-600">Serviço: {description}</p>
+          <p className="text-slate-600">Data: {data}</p>
+          <p className="text-slate-600">Valor: {valor}</p>
         </div>
       </div>
     </div>
@@ -30,6 +35,3 @@ function TaskPage() {
 }
 
 export default TaskPage;
-
-// Botão de voltar esse <button>
-// Sempre que estiver uma função com use é que esta utilizando o hook.
